@@ -50,6 +50,16 @@ Alexa will in turn respond with seamless, human like response. An example of thi
     *deep coughing sound*
     “The air quality does not look good today. Going out today will be equivalent to smoking 2.5 cigarettes. Avoid the CBD if possible, or wear a gas mask.”
  
+The follow links below provide video demonstrations of the Alexa skill in operation.
+
+Startup, City Selection, Home City Air Quality and Selected City Air Quality: https://1drv.ms/v/s!AgpCVugy6y7Vsth1WlkbuUUBTt3ifA?e=9Shw6V
+
+Air Pollutant Information, Health Risks and Specific Amount Calculated: https://1drv.ms/v/s!AgpCVugy6y7Vsth7v58ICy5TgrDIhQ?e=6QdCD5
+
+Air Pollutant Breakdown: https://1drv.ms/v/s!AgpCVugy6y7Vsth3Qrq63g_CNYtJlA?e=Lg11bs
+
+Something Fun: https://1drv.ms/v/s!AgpCVugy6y7Vsth8xa4_kSrgvcv2jw?e=UEOYFb
+
 ### About Us
 
 Our journey started in October 2019, when a number of enthusiastic people met at the Sydney NASA Space App Challenge, and formed a team aiming to address the lack of transparency around air pollution for everyday people. By providing users with a user-friendly application, an intuitive grading scale, using reliable NASA and NOAA based data, and by making our models and code transparent, we believe we will be able to further help reduce the adverse health effects of air pollution in urban areas.
