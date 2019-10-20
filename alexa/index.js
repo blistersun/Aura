@@ -398,10 +398,10 @@ const PollutantDetailedListIntentHandler = {
                     .reprompt()
                     .getResponse();
             }
-            speakOutput = `The calculated level of ${cardTitle} is ${pollutantLookup} micrograms per metres cubed.`;
+            speakOutput = `The calculated level of ${cardTitle} is ${pollutantLookup} micrograms per cubic metre.`;
         } else { //We need to include them ALL
             cardTitle = `Test`;
-            speakOutput = `Here's a breakdown of pollutants, all in micrograms per metres cubed: 
+            speakOutput = `Here's a breakdown of pollutants, all in micrograms per cubic metre: 
             the calculated level of Carbon Monoxide is ${data.co};
             the calculated level of Nitrogen Dioxide is ${data.no2};
             the calculated level of Ozone is ${data.ozone};
