@@ -1,6 +1,6 @@
-// This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK (v2).
-// Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
-// session persistence, api calls, and more.
+// This sample demonstrates handling intents to provide information about air quality, amongst other things.
+// Please visit https://github.com/blistersun/Aura to find out more.
+// Joshua Kahn, 2019
 const Alexa = require('ask-sdk-core'); //for alexa stuff
 const persistenceAdapter = require('ask-sdk-s3-persistence-adapter');  //to get S3 persistence
 const aws = require('aws-sdk'); //to access AWS
@@ -11,15 +11,15 @@ var data;
 const InfoText = {
     PM: `Particulates are produced from Industrial processes, combustion of wood and fossil fuels, \
     construction and demolition activities, and entrainment of road dust into the air. They are also produced by windblown dust and wildfires.`,
-    O3: `Ground Level Ozone is is formed when pollutants emitted by cars, power plants, industrial boilers, \
+    O3: `Ground Level Ozone is formed when pollutants emitted by cars, power plants, industrial boilers, \
     refineries, chemical plants, and other sources react chemically in the presence of sunlight.`,
     CO: `Carbon Monoxide is formed both naturally and through human-driven activities, when fuels containing carbon are burnt in low-oxygen conditions.`,
-    SO2: `Sulfu Dioxide is produced from the burning of fossil fuels - specifically coal and oil - \
+    SO2: `Sulfu Dioxide is produced from the burning of fossil fuels, specifically coal and oil, \
     and the smelting of mineral ores (such as aluminum, copper, zinc, lead, and iron) that contain sulfur.`,
     CO2: `Though many living things emit carbon dioxide when they breathe, \
     the gas is widely considered to be a pollutant when associated with cars, planes, power plants, \
     and other human activities that involve the burning of fossil fuels such as gasoline and natural gas.`,
-    NO2: `Nitrogen oxides, including nitrogen dioxide, are produced every time fossil fuels are burned--in power plants, \
+    NO2: `Nitrogen oxides, including nitrogen dioxide, are produced every time fossil fuels are burned, that being in power plants, \
     cars and other motor vehicles, as well as industrial boilers and heaters.`,
     FAIL: `Shoot, I don't know that one. You can say 'Tell me about air pollutants' and I'll provide a list of those I know about.`
 }
@@ -34,7 +34,7 @@ const HealthText = {
     SO2:`Sulfur dioxide affects the respiratory system - particularly lung function - and can irritate the eyes. Sulfur dioxide irritates the respiratory tract and increases the risk of tract infections. \
     It causes coughing, mucus secretion and aggravates conditions such as asthma and chronic bronchitis.`,
     CO: `Breathing carbon monoxide can cause headache, dizziness, vomiting, and nausea. If levels are high enough, exposed people may become unconscious or die. \
-    Exposure to moderate and high levels of CO over long periods of time has also been linked with increased risk of heart disease.`,
+    Exposure to moderate and high levels of carbon monoxide over long periods of time has also been linked with increased risk of heart disease.`,
     CO2: `Exposure to carbon dioxide can produce a variety of health effects. These may include headaches, dizziness, restlessness, a tingling or \
     pins or needles feeling, difficulty breathing, \
     sweating, tiredness, increased heart rate, elevated blood pressure, coma, asphyxia, and convulsions`,
@@ -70,16 +70,18 @@ async function csvFromAWSToInput(csvName) {
     //Sulfur Dioxide is array[7]
     //Carbon Monoxide is array[9]
     //Carbon Dioxide is array[11]
-    //AQI is array[13]
-    //Smokes (quantity) per day is array[15]
+    //Nitrogen Dioxide is array [13]
+    //AQI is array[15]
+    //Smokes (quantity) per day is array[17]
     data = {
         pm: lines[3],
         ozone: lines[5],
         so2: lines[7],
         co: lines[9],
         co2: lines[11],
-        aqi: lines[13],
-        smokes: lines[15]
+        no2: lines[13],
+        aqi: lines[15],
+        smokes: lines[17]
     } //this data could be used in additional functions in the future, such as a pollutant breakdown.
     return data;
 }
@@ -123,7 +125,18 @@ const currentCityAddIntentHandler = {
     async handle(handlerInput) {
         //Get values from slots
         const currentCity = handlerInput.requestEnvelope.request.intent.slots.currentCity.value;
-        //...and initialize the attributesManager
+        //Hold on! since we only have data on sydney and beijing in this demonstration, we need to test to make sure we're putting something good here.
+        
+        if (currentCity !== `Sydney` && (currentCity !==`Beijing`)) {
+            return handlerInput.responseBuilder
+            .speak(`Sorry, we don't have ` + currentCity + ` on file. For this demo, you can select Sydney or Beijing by saying 'Set my current city too', \
+            followed by either Sydney or Beijing.`)
+            .withSimpleCard(`City Not Detected`, `Please try again with either Sydney or Beijing.`)
+            .reprompt()
+            .getResponse();
+        }
+        
+        //since it's good, we initialize the attributesManager
         const attributesManager = handlerInput.attributesManager;
         // And then tell the attributesManager what the slots should be saved as
         const locationAttributes = {
@@ -134,7 +147,7 @@ const currentCityAddIntentHandler = {
         attributesManager.setPersistentAttributes(locationAttributes);
         //and wait for it to arrive
         await attributesManager.savePersistentAttributes();
-        const speakOutput = `Thanks, I'll remember that your current city is ${currentCity}. Please say 'Launch Aura Air' to restart the service.`;
+        const speakOutput = `Thanks, I'll remember that your current city is ${currentCity}. Please relaunch Aura Air to access my services.`;
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .withSimpleCard("Current City Saved", speakOutput)
@@ -199,7 +212,7 @@ const AirQualityLocalIntentHandler = {
         //CSV format for this Alexa demonstration is the following: 'AQD-currentCity-dateValue.csv'
         
         //With the real service, the data for each day would be put on the server automatically. 
-        //Howeve for this demonstration, the program will set the date manually.
+        //However, for the purposes of demonstration, the program will set the date manually.
         
         var dateNumGen = Math.round(Math.random())
         
@@ -221,20 +234,20 @@ const AirQualityLocalIntentHandler = {
         if (dataSmokes <= 1) {
             cardTitle = `Looking good!`
             speakOutput = `<speak>Let me check. <audio src = "https://aurafiles.s3.amazonaws.com/alexabreathe.mp3" />
-            It feels like a fine day to go outside! The measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.</speak>`
-            cardOutput = `It feels like a fine day to go outside! The measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.`
+            It looks like a fine day to go outside! The calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.</speak>`
+            cardOutput = `It feels like a fine day to go outside! The calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.`
         } else if (dataSmokes > 1 && dataSmokes < 2) {
             cardTitle = `Looking iffy...`
             speakOutput = `<speak>Let me check. <audio src = "https://aurafiles.s3.amazonaws.com/alexabreathe.mp3" />
-            It looks a little hairy...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
+            It looks a little hairy...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
             If you're sensitive to allergens, consider taking an antihistamine.</speak>`
-            cardOutput = `It looks a little hairy...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. If you're sensitive to allergens, consider taking an antihistamine.`
+            cardOutput = `It looks a little hairy...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. If you're sensitive to allergens, consider taking an antihistamine.`
         } else {
             cardTitle = `Looking bad...`
             speakOutput = `<speak>Let me check. <audio src = "https://aurafiles.s3.amazonaws.com/alexabreathetocough.mp3" /><audio src="soundbank://soundlibrary/human/amzn_sfx_cough_01"/>
-            <amazon:effect name="whispered">Not looking good...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
+            <amazon:effect name="whispered">Not looking good...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
             Minimise time spent outside, or bring a gas mask with you.</amazon:effect></speak>`
-            cardOutput = `Not looking good...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. Minimise time spent outside, or bring a gas mask with you.`
+            cardOutput = `Not looking good...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. Minimise time spent outside, or bring a gas mask with you.`
         }
         
         return handlerInput.responseBuilder
@@ -272,7 +285,7 @@ const AirQualityLocationIntentHandler = {
         }
         
         //With the real service, the data for each day would be put on the server automatically. 
-        //Howeve for this demonstration, the program will set the date manually.
+        //However, for the purposes of demonstration, the program will set the date manually.
         var dateNumGen = Math.round(Math.random())
         if (dateNumGen === 1) {
             dateValue = `2019-10-20`;
@@ -293,20 +306,20 @@ const AirQualityLocationIntentHandler = {
         if (dataSmokes <= 1) {
             cardTitle = `Looking good!`
             speakOutput = `<speak>Let me check. <audio src = "https://aurafiles.s3.amazonaws.com/alexabreathe.mp3" />
-            It feels like a fine day to go outside! The measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.</speak>`
-            cardOutput = `It feels like a fine day to go outside! The measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.`
+            It looks like a fine day to go outside! The calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.</speak>`
+            cardOutput = `It feels like a fine day to go outside! The calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes.`
         } else if (dataSmokes > 1 && dataSmokes < 2) {
             cardTitle = `Looking iffy...`
             speakOutput = `<speak>Let me check. <audio src = "https://aurafiles.s3.amazonaws.com/alexabreathe.mp3" />
-            It looks a little hairy...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
+            It looks a little hairy...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
             If you're sensitive to allergens, consider taking an antihistamine.</speak>`
-            cardOutput = `It looks a little hairy...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. If you're sensitive to allergens, consider taking an antihistamine.`
+            cardOutput = `It looks a little hairy...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. If you're sensitive to allergens, consider taking an antihistamine.`
         } else {
             cardTitle = `Looking bad...`
             speakOutput = `<speak>Let me check. <audio src = "https://aurafiles.s3.amazonaws.com/alexabreathetocough.mp3" /><audio src="soundbank://soundlibrary/human/amzn_sfx_cough_01"/>
-            <amazon:effect name="whispered">Not looking good...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
+            <amazon:effect name="whispered">Not looking good...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. \
             Minimise time spent outside, or bring a gas mask with you.</amazon:effect></speak>`
-            cardOutput = `Not looking good...the measured air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. Minimise time spent outside, or bring a gas mask with you.`
+            cardOutput = `Not looking good...the calculated air quality is equivalent to breathing ` + dataSmokes + ` cigarettes. Minimise time spent outside, or bring a gas mask with you.`
         }
         
         return handlerInput.responseBuilder
@@ -317,7 +330,96 @@ const AirQualityLocationIntentHandler = {
     }
 };
 
-// If someone asks for info about Pollutants
+//when people want a detailed list of pollutants, or the specific level of one
+const PollutantDetailedListIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'PollutantDetailedListIntent';
+    },
+   async handle(handlerInput) {
+        
+        //We load the attributes manager
+        const attributesManager = handlerInput.attributesManager;
+        const sessionAttributes = attributesManager.getSessionAttributes() || {};
+        //and get not the city and time indicated by each slot. 
+        
+        let dateValue = handlerInput.requestEnvelope.request.intent.slots.date.value;  //get the current date to feed into data retrieval 
+        let pollutantSlotValue = handlerInput.requestEnvelope.request.intent.slots.pollutant.value;
+        let cityListValue = sessionAttributes.hasOwnProperty('currentCity') ? sessionAttributes.currentCity : 0;
+        
+        //The city is set to the home city for the purposes of this demonstration. The function could additionally be set up to check for a city via slot value.
+        
+        //With the real service, the data for each day would be put on the server automatically. 
+        //However, for the purposes of demonstration, the program will set the date manually.
+        var dateNumGen = Math.round(Math.random())
+        if (dateNumGen === 1) {
+            dateValue = `2019-10-20`;
+        } else {
+            dateValue = `2019-10-21`;
+        }
+        
+        //CSV format for this Alexa demonstration is the following: 'AQD-cityValue-dateValue.csv'
+        const csvName = `AQD-` + cityListValue + `-` + dateValue + `.csv`;
+        //ask the almighty function to retrieve the corresponding file from the AWS server
+        data = await csvFromAWSToInput(csvName);
+        //but now that we have data, we can get specific information on each pollutant.
+        
+        let cardTitle; //to put on the card, and also determine what should be said in the message dynamically
+        let speakOutput; //Determine what we should specifically say...
+        let pollutantLookup;//...dynamically, of course
+        
+        //There are two cases: 1.Specific pollutant information, and 2.All pollutant information.
+        //We need to determine which pollutant is being looked for here, and also if there is any pollutant entered at all..
+        if (pollutantSlotValue) { //now we find out which pollutant
+            if (pollutantSlotValue === 'carbon monoxide') {
+                cardTitle = `Carbon Monoxide`;
+                pollutantLookup = data.co;
+            } else if (pollutantSlotValue === 'nitrogen dioxide') {
+                cardTitle = `Nitrogen Dioxide`;
+                pollutantLookup = data.no2;
+            } else if (pollutantSlotValue === 'ozone') {
+                cardTitle = `Ozone`;
+                pollutantLookup = data.ozone;
+            } else if (pollutantSlotValue === 'sulfur dioxide') {
+                cardTitle = `Sulfur Dioxide`;
+                pollutantLookup = data.so2;
+            } else if (pollutantSlotValue === 'carbon dioxide') {
+                cardTitle = `Carbon Dioxide`;
+                pollutantLookup = data.co2;
+            } else if (pollutantSlotValue === 'particulate matter') {
+                cardTitle = `Particulate Matter`
+                pollutantLookup = data.pm;
+            } else {
+                cardTitle = `Pollutant Not Found`;
+                speakOutput = InfoText.FAIL;
+                return handlerInput.responseBuilder
+                    .speak(speakOutput)
+                    .withSimpleCard(cardTitle, speakOutput)
+                    .reprompt()
+                    .getResponse();
+            }
+            speakOutput = `The calculated level of ${cardTitle} is ${pollutantLookup} micrograms per metres cubed.`;
+        } else { //We need to include them ALL
+            cardTitle = `Test`;
+            speakOutput = `Here's a breakdown of pollutants, all in micrograms per metres cubed: 
+            the calculated level of Carbon Monoxide is ${data.co};
+            the calculated level of Nitrogen Dioxide is ${data.no2};
+            the calculated level of Ozone is ${data.ozone};
+            the calculated level of Sulfur Dioxide is ${data.so2};
+            the calculated level of Carbon Dioxide is ${data.co2};
+            the calculated level of Particulate Matter is ${data.pm};
+            Finally, the calculated AQI is ${data.aqi}, which is equivalent to ${data.smokes} cigarettes per day.`
+        }
+
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .withSimpleCard(cardTitle, speakOutput)
+            .reprompt()
+            .getResponse();
+    }
+};
+
+// If someone asks for info about Pollutants in general
 const PollutantInfoIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -368,8 +470,6 @@ const PollutantInfoIntentHandler = {
             .getResponse();
     }
 };
-
-//Idea: When someone triggers either PollutantInfo or PollutantHealth, the Pollutant measured gets saved into an attribute. 
 
 //If someone asks for health effects about pollutants
 const PollutantHealthIntentHandler = {
@@ -444,7 +544,8 @@ const chernobylIntentHandler = { //a bit of fun
         //play a sound and say something funny. Not to be taken seriously
         
         let cardTitle =  `Special message from the Kommissar.`;
-        let speakOutput = `<speak>Special message from the Kommissar.<audio src = "https://aurafiles.s3.amazonaws.com/alexaChernobyl.mp3" /></speak>`; //Determine what recommendation we want to give
+        let speakOutput = `<speak>Special message from the Kommissar.<audio src = "https://aurafiles.s3.amazonaws.com/alexaChernobyl.mp3" />
+        That sounded important!</speak>`; //Determine what recommendation we want to give
         
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -554,6 +655,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         AirQualityLocalIntentHandler,
         AirQualityLocationIntentHandler,
         LaunchRequestHandler,
+        PollutantDetailedListIntentHandler,
         currentCityAddIntentHandler,
         PollutantInfoIntentHandler,
         PollutantHealthIntentHandler,
