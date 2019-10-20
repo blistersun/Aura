@@ -1,0 +1,410 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "aura air",
+            "intents": [
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "PollutantInfoIntent",
+                    "slots": [
+                        {
+                            "name": "pollutant",
+                            "type": "pollutant",
+                            "samples": [
+                                "How about {pollutant}",
+                                "What about {pollutant}",
+                                "I'd like to know more about {pollutant}",
+                                "Tell me about {pollutant}",
+                                "I'd like to know about {pollutant}",
+                                "{pollutant}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "what can you tell me about air pollutants",
+                        "tell me about air pollutants",
+                        "tell me what {pollutant} is",
+                        "What are the different types of air pollutants",
+                        "What's {pollutant}",
+                        "What is {pollutant}",
+                        "Tell me about {pollutant}"
+                    ]
+                },
+                {
+                    "name": "PollutantHealthIntent",
+                    "slots": [
+                        {
+                            "name": "pollutant",
+                            "type": "pollutant",
+                            "samples": [
+                                "What about {pollutant}",
+                                "I'd like to know more about {pollutant}",
+                                "tell me about {pollutant}",
+                                "Tell me about the health effects of {pollutant}",
+                                "I'd like to know about {pollutant}",
+                                "How about {pollutant}",
+                                "{pollutant}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "What are the health effects",
+                        "Tell me about air pollutant effects",
+                        "Why are air pollutants harmful",
+                        "Why is it bad to breathe {pollutant}",
+                        "How does {pollutant} hurt people ",
+                        "How does {pollutant} hurt",
+                        "What happens if I breathe {pollutant}",
+                        "How is {pollutant} harmful",
+                        "What are the health effects of {pollutant}"
+                    ]
+                },
+                {
+                    "name": "airQualityLocalIntent",
+                    "slots": [
+                        {
+                            "name": "date",
+                            "type": "AMAZON.DATE",
+                            "samples": [
+                                "How about {date}",
+                                "{date}",
+                                "I would like {date}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "what is the air weather",
+                        "how is {date} air quality",
+                        "what is {date} air quality like",
+                        "what is {date} s air quality",
+                        "what is the weather {date}",
+                        "tell me about the weather {date}",
+                        "what is the air quality {date}",
+                        "show me air quality {date}",
+                        "show me the air quality {date}",
+                        "tell me about air quality  {date}",
+                        "tell me about the air quality {date}",
+                        "what will the air quality be like {date}",
+                        "what is the air quality going to be like {date}",
+                        "how is the air quality {date}",
+                        "what is the air quality here",
+                        "what is the air quality like {date}"
+                    ]
+                },
+                {
+                    "name": "currentCityAddIntent",
+                    "slots": [
+                        {
+                            "name": "currentCity",
+                            "type": "AMAZON.City"
+                        }
+                    ],
+                    "samples": [
+                        "Set my current city to {currentCity}",
+                        "I'm in {currentCity} ",
+                        "Change my current city to {currentCity}",
+                        "I'm in {currentCity} right now",
+                        "I currently live in {currentCity}",
+                        "I'm currently in {currentCity}",
+                        "I live in {currentCity}"
+                    ]
+                },
+                {
+                    "name": "airQualityLocationIntent",
+                    "slots": [
+                        {
+                            "name": "queryCity",
+                            "type": "AMAZON.City"
+                        },
+                        {
+                            "name": "date",
+                            "type": "AMAZON.DATE",
+                            "samples": [
+                                "{date}",
+                                "How about {date}",
+                                "I would like {date}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "what is {date} s air quality like in {queryCity}",
+                        "show me what the air quality is like in {queryCity}",
+                        "show me what the air quality is like in {queryCity} {date}",
+                        "show me the air quality in {queryCity}",
+                        "tell me what the air quality is like in {queryCity}",
+                        "tell me what the air quality is like in {queryCity} {date}",
+                        "What will be the air quality in {queryCity} {date}",
+                        "How is the air quality in {queryCity} {date}",
+                        "What is the air quality like in {queryCity} {date}"
+                    ]
+                },
+                {
+                    "name": "chernobylIntent",
+                    "slots": [],
+                    "samples": [
+                        "What was the weather like in nineteen eighty six in Chernobyl ",
+                        "What was the air quality like in Chernobyl in nineteen eighty six",
+                        "What was the air quality like in Chernobyl nineteen eighty six",
+                        "What was the weather like in Chernobyl nineteen eighty six"
+                    ]
+                },
+                {
+                    "name": "PollutantDetailedListIntent",
+                    "slots": [
+                        {
+                            "name": "date",
+                            "type": "AMAZON.DATE",
+                            "samples": [
+                                "I want to know about {date}",
+                                "How about {date}",
+                                "{date}"
+                            ]
+                        },
+                        {
+                            "name": "pollutant",
+                            "type": "pollutant"
+                        }
+                    ],
+                    "samples": [
+                        "how much {pollutant} is in the air {date}",
+                        "give me a breakdown of pollutants",
+                        "Give me a breakdown of pollutants {date}",
+                        "What are the specific levels of air pollutants {date}",
+                        "How is the level of {pollutant} {date}",
+                        "What is the level of {pollutant} {date}",
+                        "What are the levels of air pollutants like {date}",
+                        "What are the levels of air pollutants {date}",
+                        "What are the specific levels of air pollutants"
+                    ]
+                }
+            ],
+            "types": [
+                {
+                    "name": "pollutant",
+                    "values": [
+                        {
+                            "name": {
+                                "value": "carbon dioxide",
+                                "synonyms": [
+                                    "CO two"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "nitrogen dioxide",
+                                "synonyms": [
+                                    "N O two"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "carbon monoxide",
+                                "synonyms": [
+                                    "C O"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "sulfur dioxide",
+                                "synonyms": [
+                                    "S O two"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "ozone",
+                                "synonyms": [
+                                    "O three"
+                                ]
+                            }
+                        },
+                        {
+                            "name": {
+                                "value": "particulate matter",
+                                "synonyms": [
+                                    "particulates",
+                                    "PM ten",
+                                    "PM two point five"
+                                ]
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "PollutantInfoIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "pollutant",
+                            "type": "pollutant",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.154051038507.424377047161"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PollutantHealthIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "pollutant",
+                            "type": "pollutant",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.202678914580.502157936107"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "airQualityLocalIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "date",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1350952362057.52579137487"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "airQualityLocationIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "queryCity",
+                            "type": "AMAZON.City",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        },
+                        {
+                            "name": "date",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1369664353331.471232125055"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "PollutantDetailedListIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "date",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.636805130728.1402843271358"
+                            }
+                        },
+                        {
+                            "name": "pollutant",
+                            "type": "pollutant",
+                            "confirmationRequired": false,
+                            "elicitationRequired": false,
+                            "prompts": {}
+                        }
+                    ]
+                }
+            ],
+            "delegationStrategy": "ALWAYS"
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.154051038507.424377047161",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "I can provide info on particulate matter, ozone, carbon monoxide, carbon dioxide, silicon dioxide or nitrogen dioxide. What pollutant would you like to know more about?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.873050617661.742873849546",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "I can provide info on either particulates under two point five or ten microns, ozone, carbon monoxide, silicon dioxide or nitrogen dioxide. What pollutant woud you like to know more about?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1350952362057.52579137487",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Would you like the air quality today, or the forecast for tomorrow's air quality?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.202678914580.502157936107",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "I can provide health info on particulates matter, ozone, carbon monoxide, carbon dioxide, silicon dioxide or nitrogen dioxide. What pollutant would you like to know more about?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.1369664353331.471232125055",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Would you like the air quality in {queryCity} for today, or the forecast for tomorrow's air quality there?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.636805130728.1402843271358",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Are you looking for today's pollutant level information or tommorow?"
+                    }
+                ]
+            }
+        ]
+    }
+}
