@@ -22,6 +22,16 @@ For NASA Spaceapps Sydney 2019, this was hosted on an Alexa-Supported Node.JS se
 
 To install, first paste the contents of 'interactionmodel.json' into Alexa's JSON editor. Then, install your media and data files to an AWS S3 bucket of your choosing, and keep the S3 bucket URL. Finally, paste the contents of 'index.js', 'package.json' and 'util.js' into their respective files.
 
+### Videos of operation
+The follow links below provide video demonstrations of the Alexa skill in operation.
+
+Startup, City Selection, Home City Air Quality and Selected City Air Quality: https://1drv.ms/v/s!AgpCVugy6y7Vsth1WlkbuUUBTt3ifA?e=9Shw6V
+
+Air Pollutant Information, Health Risks and Specific Amount Calculated: https://1drv.ms/v/s!AgpCVugy6y7Vsth7v58ICy5TgrDIhQ?e=6QdCD5
+
+Air Pollutant Breakdown: https://1drv.ms/v/s!AgpCVugy6y7Vsth3Qrq63g_CNYtJlA?e=Lg11bs
+
+Something Fun: https://1drv.ms/v/s!AgpCVugy6y7Vsth8xa4_kSrgvcv2jw?e=UEOYFb
 
 License
 ----
